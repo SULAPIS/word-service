@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import * as apigw from "aws-cdk-lib/aws-apigateway";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 
-const domain = "api.dummy.com";
+const domain = "api.sulapis.com";
 
 export class WordServiceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -18,19 +18,19 @@ export class WordServiceStack extends cdk.Stack {
     const api = new apigw.RestApi(this, "WordApi", {
       restApiName: "Word Service API",
       deployOptions: {
-        cachingEnabled: true,
-        cacheClusterEnabled: true,
+        // cachingEnabled: true,
+        // cacheClusterEnabled: true,
         stageName: "prod",
         dataTraceEnabled: true,
         loggingLevel: apigw.MethodLoggingLevel.INFO,
-        cacheTtl: cdk.Duration.hours(1),
+        // cacheTtl: cdk.Duration.hours(1),
         throttlingBurstLimit: 100,
         throttlingRateLimit: 100,
         tracingEnabled: true,
         metricsEnabled: true,
       },
       defaultCorsPreflightOptions: {
-        allowOrigins: ["dummy"],
+        allowOrigins: ["https://sulapis.com"],
         allowMethods: ["GET"],
         allowHeaders: apigw.Cors.DEFAULT_HEADERS,
       },
@@ -45,8 +45,8 @@ export class WordServiceStack extends cdk.Stack {
       new apigw.LambdaIntegration(getWordHandler, {
         proxy: true,
         allowTestInvoke: true,
-        cacheKeyParameters: ["method.request.path.word"],
-        cacheNamespace: "wordCache",
+        // cacheKeyParameters: ["method.request.path.word"],
+        // cacheNamespace: "wordCache",
         requestParameters: {
           "integration.request.path.word": "method.request.path.word",
         },
@@ -64,8 +64,9 @@ export class WordServiceStack extends cdk.Stack {
         "DomainName",
         {
           domainName: domain,
-          domainNameAliasHostedZoneId: "dummy",
-          domainNameAliasTarget: "dummy",
+          domainNameAliasHostedZoneId: "Z3UWIKFBOOGXPP",
+          domainNameAliasTarget:
+            "d-xz5467uwuh.execute-api.eu-north-1.amazonaws.com",
         }
       ),
       restApi: api,
